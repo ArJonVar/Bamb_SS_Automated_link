@@ -160,6 +160,7 @@ class BambSSLink:
                     email = item
                     if email in (None, ""):
                         email = f"{self.dir_df.lastName.values[rownum]}.field-employee@dowbuilt.com"
+                        email = email.replace(" ", "_")
                     if nme == None:
                         nme = item
                     item_contact = {
