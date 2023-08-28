@@ -46,7 +46,7 @@ class BambSSLink:
         self.columnid_jobtitle = self.fetch_column_id("jobTitle")
         self.columnid_department = self.fetch_column_id("department")
         self.columnid_location = self.fetch_column_id("location")
-        self.columnid_division = self.fetch_column_id("division")
+        # self.columnid_division = self.fetch_column_id("division")
         self.columnid_supervisor = self.fetch_column_id("supervisor")
         self.columnid_bamboo_id = self.fetch_column_id("Bamboo_id")
         self.columnid_mobilephone = self.fetch_column_id("mobilePhone")
@@ -54,6 +54,7 @@ class BambSSLink:
         self.columnid_employee_number = self.fetch_column_id("employee_number")
         self.columnid_workphone = self.fetch_column_id("workPhone")
         self.columnid_photoUrl = self.fetch_column_id("photoUrl")
+        self.columnid_emailAsText = self.fetch_column_id("emailAsText")
     def fetch_sheet_grid_obj(self, sheet_id):
         df=grid(sheet_id)
         df.fetch_content()
@@ -126,6 +127,7 @@ class BambSSLink:
                "employee_number",
                "workPhone",
                "photoUrl",
+               "workEmail",
            ]
         ]
         
