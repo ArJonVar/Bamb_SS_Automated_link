@@ -46,7 +46,7 @@ class BambSSLink:
         self.columnid_jobtitle = self.fetch_column_id("jobTitle")
         self.columnid_department = self.fetch_column_id("department")
         self.columnid_location = self.fetch_column_id("location")
-        # self.columnid_division = self.fetch_column_id("division")
+        self.columnid_division = self.fetch_column_id("division")
         self.columnid_supervisor = self.fetch_column_id("supervisor")
         self.columnid_bamboo_id = self.fetch_column_id("Bamboo_id")
         self.columnid_mobilephone = self.fetch_column_id("mobilePhone")
@@ -119,7 +119,7 @@ class BambSSLink:
                "jobTitle",
                "department",
                "location",
-            #    "division",
+               "division",
                "supervisor",
                "Bamboo_id",
                "mobilePhone",
