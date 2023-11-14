@@ -5,8 +5,10 @@ import time
 import datetime
 import pandas as pd
 from smartsheet_grid import grid
-from globals import sensative_smartsheet_token, sensative_bamboo_token
+from globals import sensative_smartsheet_token, sensative_bamboo_token, automation_bamboo_token
 from logger import ghetto_logger
+import json
+import requests
 #endregion
 
 class BambSSLink:
@@ -94,7 +96,29 @@ class BambSSLink:
         
         self.dir_df_raw["employee_number"] = employee_numbers
         self.log.log(f"{self.timestamp()}  employee numbers imported from Bamboo API")  
+    def position_category_api_call(self, id):
+        '''api call to grab position category, needs seperate api key (automation@dowbuilt.com)'''
 
+        url = f"https://api.bamboohr.com/api/gateway.php/Dowbuilt/v1/employees/{id}/?fields=customPositionCategory&onlyCurrent=true"
+
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Basic {self.config.get('b2token')}"
+        }       
+
+        response = requests.get(url, headers=headers)
+
+        return json.loads(response.text).get('customPositionCategory')
+
+    def add_position_category(self):
+        '''the df comes with default options, we need non default option of position category'''
+        pos_cat = [
+            self.position_category_api_call(id)
+            for id in self.dir_df_raw["id"]
+        ]
+
+        self.dir_df_raw["position_category"] = pos_cat
+        self.log.log(f"{self.timestamp()}  position categories imported from Bamboo API") 
     def add_preferred_name(self):
         '''the def comes with default options, now we add preffered name as a new column'''
     
@@ -128,6 +152,7 @@ class BambSSLink:
                "workPhone",
                "photoUrl",
                "workEmail",
+               "position_category"
            ]
         ]
         
@@ -200,6 +225,7 @@ class BambSSLink:
         self.log.log(f'{self.timestamp()} start')
         self.dir_df_raw = self.fetch_dir_df()
         self.add_sageids()
+        self.add_position_category()
         self.add_employee_ids()
         self.add_preferred_name()
         self.reorder_df()
@@ -209,6 +235,6 @@ class BambSSLink:
         self.log.log(f'{self.timestamp()} fin')
 
 if __name__ == "__main__":
-    config = {'stoken':sensative_smartsheet_token, 'btoken':sensative_bamboo_token, 'dest_sheet_id': 5956860349048708}
+    config = {'stoken':sensative_smartsheet_token, 'btoken':sensative_bamboo_token, 'b2token':automation_bamboo_token,  'dest_sheet_id': 5956860349048708}
     bsl = BambSSLink(config)
     bsl.cron_run()
